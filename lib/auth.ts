@@ -7,7 +7,7 @@ const SECRET = new TextEncoder().encode(
 );
 
 const COOKIE_NAME = "rama_session";
-const MAX_AGE     = 60 * 60 * 24 * 7; // 7 days
+const MAX_AGE     = 60 * 60 * 24 * 7;
 
 export interface Session {
   userId:       string;
@@ -49,13 +49,13 @@ export async function getSessionFromRequest(req: NextRequest): Promise<Session |
   return verifySession(token);
 }
 
-export function setSessionCookie(token: string): Parameters<ReturnType<typeof cookies>["set"]>[1] {
+export function setSessionCookie(token: string) {
   return {
     name:     COOKIE_NAME,
     value:    token,
     httpOnly: true,
     secure:   process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     maxAge:   MAX_AGE,
     path:     "/",
   };

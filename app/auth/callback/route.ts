@@ -36,12 +36,13 @@ export async function GET(req: NextRequest) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const res    = NextResponse.redirect(new URL(redirectTo, appUrl));
-    res.cookies.set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure:   process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge:   60 * 60 * 24 * 7,
-      path:     "/",
+    const opts   = setSessionCookie(token);
+    res.cookies.set(COOKIE_NAME, opts.value, {
+      httpOnly: opts.httpOnly,
+      secure:   opts.secure,
+      sameSite: opts.sameSite,
+      maxAge:   opts.maxAge,
+      path:     opts.path,
     });
     return res;
   } catch (err) {
